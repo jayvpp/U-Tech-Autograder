@@ -6,11 +6,24 @@ using System.Web.Mvc;
 
 namespace AutoGrader.Controllers
 {
+
     public class HomeController : Controller
     {
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
+            return View();
+        }
+        [Authorize(Roles = "Professor")]
+        public ActionResult About()
+        {
+            ViewBag.Message = "Your application description page.";
+
+            return View();
+        }
+        [Authorize(Roles = "Students")]
+        public ActionResult Contact()
+        {
+            ViewBag.Message = "Your contact page.";
 
             return View();
         }
