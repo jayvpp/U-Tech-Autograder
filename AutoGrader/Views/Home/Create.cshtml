@@ -1,0 +1,94 @@
+﻿@model AutoGrader.Models.TestBase
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+        <h4>TestBase</h4>
+      
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StartTime, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Score, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Score, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Score, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <h1>Questions</h1>
+
+        <div ng-app="autoTesting" ng-controller="testController">
+            {{2+2}}
+
+            <button ng-click="addQuestion()">AddQuestion</button>
+
+            <select ng-model="selected">
+                <option value="MultiSelect">Multi-Select</option>
+                <option value="SingleSelect">Single-Select</option>
+                <option value="TrueFalse">True-Flase</option>
+                <option value="Paragraph">Paragraph</option>
+                <option value="ShortAnswer">Short Answer</option>
+            </select>
+
+            <h2>Statement</h2>
+            <div class="question">
+                <h1>Question {{statement}}</h1>
+                <input type="text" class="form-control" ng-model="statement" placeholder="{{statement}}"><br>
+
+                <div class="multiselect">
+                    <div ng-repeat="x in [1,2,3,4]">
+                        <input class="mscheck" ng-if="selected == 'MultiSelect'" type="checkbox" name="quetion" value={{x}}><input class="mstext" ng-if="selected == 'MultiSelect'"><br>
+                    </div>
+                </div>
+
+                <div class="singleselect">
+                    <div ng-repeat="x in [1,2,3,4]">
+                        <input class="sscheck" ng-if="selected == 'SingleSelect'" type="radio" name="quetion" value={{x}}><input class="sstext" ng-if="selected == 'SingleSelect'"><br>
+                    </div>
+                </div>
+
+                <div class="truefalse">
+                    <input class="tfcheck" ng-if="selected == 'TrueFalse'" type="radio" name="tfq{{$index}}" value={{x}}><span ng-if="selected == 'TrueFalse'">True</span><br />
+                    <input class="tfcheck" ng-if="selected == 'TrueFalse'" type="radio" name="tfq{{$index}}" value={{x}}><span ng-if="selected == 'TrueFalse'">False</span>
+                </div>
+
+            </div>
+        </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create Test" class="btn btn-default" />
+        </div>
+    </div>
+}
+
+<div>
+    @Scripts.Render("~/bundles/angularjs")
+    @Scripts.Render("~/Scripts/appScripts/app.js")
+    @Html.ActionLink("Back to List", "Index")
+</div>
