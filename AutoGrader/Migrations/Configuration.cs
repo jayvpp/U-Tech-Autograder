@@ -9,8 +9,7 @@ namespace AutoGrader.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
-            ContextKey = "AutoGrader.Models.ApplicationDbContext";
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(AutoGrader.Models.ApplicationDbContext context)
@@ -26,10 +25,10 @@ namespace AutoGrader.Migrations
             //      new Person { FullName = "Brice Lambson" },
             //      new Person { FullName = "Rowan Miller" }
             //    );
-            //
 
-            context.Roles.Add(new Microsoft.AspNet.Identity.EntityFramework.IdentityRole("Professor"));
-            context.Roles.Add(new Microsoft.AspNet.Identity.EntityFramework.IdentityRole("Students"));
+
+            context.Roles.AddOrUpdate(new Microsoft.AspNet.Identity.EntityFramework.IdentityRole("student"));
+            context.Roles.AddOrUpdate(new Microsoft.AspNet.Identity.EntityFramework.IdentityRole("professor"));
         }
     }
 }
