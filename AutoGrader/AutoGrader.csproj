@@ -284,7 +284,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\Professor.cshtml" />
     <Content Include="Views\Home\Student.cshtml" />
-    <Content Include="Views\Home\Create.cshtml" />
+    <Content Include="Views\Test\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
