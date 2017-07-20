@@ -1,18 +1,21 @@
 ﻿var app = angular.module("autoTesting", []); 
 app.controller("testController", function ($scope) {
     //$scope.types = ["MultiSelect", "SingleSelect", "TrueFlase", "Paragraph", "ShortAnswer"];
-    $scope.questions = [];
-
+    $scope.questions = []
     $scope.selected = "MultiSelect";
     $scope.statement = "Type question...";
 
+    $scope.add = function () {
+        $scope.carname.push(6);
+
+    }
     function buildBoolenQuestion(statement,answer) {
         var question = {
             "type": "booleanquestion",
             "statement": statement,
             "answer" : answer
         };
-        return question
+        return question;
     }
 
     function buildSingleChoiceQuestion(statement, posibleAnswers, correctAnswer)
@@ -23,7 +26,7 @@ app.controller("testController", function ($scope) {
             "posibleAnswers": posibleAnswers,
             "correctAnswer" : correctAnswer
         };
-        return question
+        return question;
     }
 
     function buildMultipleChoiceQuestion(statement, posibleAnswers, correctAnswers) {
@@ -33,7 +36,7 @@ app.controller("testController", function ($scope) {
             "posibleAnswers": posibleAnswers,
             "correctAnswers": correctAnswers
         };
-        return question
+        return question;
     }
 
     function buildShortAnswerQuestion(statement, answer)
@@ -56,7 +59,7 @@ app.controller("testController", function ($scope) {
     }
 
     $scope.addQuestion = function () {
-     
+   
         //WE CAN REFACTOR THE SCOPE.QUESTIONS.PUSH SO WE DONT NEED TO CALL IN ON EACH IF
         if ($scope.selected == "MultiSelect")
         {
@@ -76,10 +79,12 @@ app.controller("testController", function ($scope) {
                     correctAnswers.push(posOption)
             }
 
-            var question =  buildMultipleChoiceQuestion($scope.statement,
+            var question =  buildMultipleChoiceQuestion("holamundo",
                                                 posibleAnswers,
                                                 correctAnswers)
             $scope.questions.push(question);
+            return;
+
         }
 
         if ($scope.selected == "SingleSelect")
@@ -106,6 +111,7 @@ app.controller("testController", function ($scope) {
                                              correctAnswer);
             
             $scope.questions.push(question);
+            return;
         }
 
         if ($scope.selected == "TrueFalse")
@@ -120,8 +126,16 @@ app.controller("testController", function ($scope) {
             var question = buildBoolenQuestion($scope.statement, result);
 
             $scope.questions.push(question);
+            return;
         }
 
+        if ($scope.selected == "ShortAnswer")
+        {
+            var answer = $(".shortanswercheck").val().toLowerCase();
+            //check that answer is one world,if not return notification to user
+            var question = buildShortAnswerQuestion($scope.statement, answer);
+            $scope.questions.push(question);
+        }
 
     };
 
