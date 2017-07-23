@@ -1,10 +1,20 @@
 ﻿var app = angular.module("autoTesting", []); 
-app.controller("testController", function ($scope, $http) {
+app.controller("createTestController", function ($scope, $http, $timeout) {
     $scope.numberQuestions = [1,2,3];
-    $scope.questions = []
+    $scope.allQuestions = []
+    $scope.alerts = []
+    //types of questions
+    $scope.singleChoiceQuestions = []
+    $scope.multipleChoiceQuestions = []
+    $scope.booleanQuestions = []
+    $scope.shortAnswerQuestions = []
+    $scope.paragraphQuestions = []
+
     $scope.selected = "MultiSelect";
     $scope.statement = "Type question...";
-
+    $scope.testName = "";
+    $scope.testMaxScore = "";
+    $scope.testPassingGrade = "";
     $scope.add = function () {
       
     }
@@ -52,7 +62,6 @@ app.controller("testController", function ($scope, $http) {
         var question = {
             "type": "paragraph",
             "statement": statement,
-            "paragraphAnswer": paragraphAnswer
         };
         return question;
     }
@@ -96,9 +105,10 @@ app.controller("testController", function ($scope, $http) {
     };
 
     function retriveMultipleChoiceQuestion() {
+        console.log("entering retriveMultipleChoiceQuestion");
 
         var optionsCount = $(".mscheck").size();
-
+        console.log("count " + optionsCount);
         var checkValues = $(".mscheck");
         var textValues = $(".mstext");
 
@@ -129,59 +139,100 @@ app.controller("testController", function ($scope, $http) {
 
     function retriveParagraphAnswerQuestion() { };
 
-    $scope.addMoreOptions = function () {
+    $scope.addOption = function () {
         $scope.numberQuestions.push($scope.numberQuestions.length + 1);
     };
 
-    $scope.addQuestion = function () {
-   
-        //WE CAN REFACTOR THE SCOPE.QUESTIONS.PUSH SO WE DONT NEED TO CALL IN ON EACH IF
-        if ($scope.selected == "MultiSelect") {
-            var question = retriveMultipleChoiceQuestion();
-            $scope.questions.push(question);
+    $scope.removeOption = function () {
+        if ($scope.numberQuestions.length <= 2) {
+            alert("You have to have at least two options");
+            return;
+        }
+        $scope.numberQuestions.pop();
+    };
 
+    $scope.cleanAlers = function () {
+        $scope.alerts.splice(0, $scope.alerts.length);
+    };
+
+    $scope.submitTest = function () {
+        //error = false;
+
+        //if ($scope.testName == "") {
+        //    $scope.alerts.push("You must enter a Test Name before submitting");
+        //    error = true;
+        //}
+        //if ($scope.testMaxScore == "") {
+        //    $scope.alerts.push("You must enter a Test Maximun Score value before submitting");
+        //    error = true;
+        //}  
+        //if ($scope.testPassingGrade == ""){
+        //    $scope.alerts.push("You must enter a Test Passing Grade value before submitting");
+        //    error = true;
+        //}
+        //if (error) {
+        //    $timeout(function () { $scope.alerts.splice(0, $scope.alerts.length); }, 5000);
+        //    return
+        //}
+        alert("ccalling http");
         var request = $http(
                 {
                     method: "post",
+                    dataType: "json",
                     url: "/Test/CreateMultipleChoiceQuestion/",
-                    data: question
+                    data: {
+                     
+                        testName: $scope.testName,
+                        testMaxScore: $scope.testMaxScore,
+                        testPassingGrade: $scope.testPassingGrade,
+                        multipleChoiceQuestions: $scope.multipleChoiceQuestions,
+                        singleChoiceQuestions: $scope.singleChoiceQuestions,
+                        booleanQuestions: $scope.booleanQuestion,
+                        shortAnswerQuestions: $scope.shortAnswerQuestion
+                        //paragraphQuestions : $Scope.paragraphQuestion
+                    }
                 }
             );
+        return;
 
+    };
+
+
+    $scope.addQuestion = function () {
+
+        //WE CAN REFACTOR THE SCOPE.QUESTIONS.PUSH SO WE DONT NEED TO CALL IN ON EACH IF
+        if ($scope.selected == "MultiSelect") {
+            var question = retriveMultipleChoiceQuestion();
+            $scope.allQuestions.push(question);
+            $scope.multipleChoiceQuestions.push(question);
             return;
         }
 
-        if ($scope.selected == "SingleSelect"){
+        if ($scope.selected == "SingleSelect") {
             var question = retriveSingleChoiceQuestion();
-            $scope.questions.push(question);
-
-            var request = $http(
-                {
-                    method: "post",
-                    url: "/Test/CreateSingleChoiceQuestion/",
-                    data: question
-                }
-            );
-
+            $scope.allQuestions.push(question);
+            $scope.singleChoiceQuestions.push(question);
             return;
         }
 
-        if ($scope.selected == "TrueFalse"){
+        if ($scope.selected == "TrueFalse") {
             var question = retriveBoolenQuestion()
-            $scope.questions.push(question);
+            $scope.allQuestions.push(question);
+            $scope.booleanQuestion.push(question);
             return;
         }
 
-        if ($scope.selected == "ShortAnswer")
-        {
+        if ($scope.selected == "ShortAnswer") {
             var answer = $(".shortanswercheck").val().toLowerCase();
             //check that answer is one world,if not return notification to user
             var question = retriveShortAnswerQuestion();
-            $scope.questions.push(question);
+            $scope.allQuestions.push(question);
+            $scope.shortAnswerQuestion.push(question);
             return;
         }
 
     };
+
 
 
 

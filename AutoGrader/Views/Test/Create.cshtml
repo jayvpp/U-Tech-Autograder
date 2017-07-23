@@ -1,116 +1,171 @@
 ﻿@model AutoGrader.Models.TestBase
 
+<div ng-app="autoTesting" ng-controller="createTestController">
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-        <h4>TestBase</h4>
-      
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+    <div class="row">
+        <div class="col-md-4">
+          
+            <h1>Creating Test</h1>
+            <div id="errorMsg">
+                <div ng-repeat="alert in alerts track by $index">
+                    <div class="alert alert-danger">
+                        <strong>Danger!</strong> {{alert}}
+                    </div>
+                </div>
             </div>
-        </div>
+            <input type="button" ng-click="submitTest()" value="Create Test" class="btn btn-success" />
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.StartTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <label >Name</label>
+                <input id="testName" class="form-control" ng-model="testName" ng-click="cleanAlers()">
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <label>Score</label>
+                <input id="testMaxScore" class="form-control" ng-model="testMaxScore">
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Score, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Score, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Score, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <label>Passing Grades</label>
+                <input id="testPassingScore" class="form-control" ng-model="testPassingGrade">
             </div>
-        </div>
 
-        <h1>Questions</h1>
-
-   
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create Test" class="btn btn-default" />
-        </div>
-    </div>
-}
-
-<div ng-app="autoTesting" ng-controller="testController">
-    {{2+2}}
-
-    <select ng-model="selected">
-        <option value="MultiSelect">Multi-Select</option>
-        <option value="SingleSelect">Single-Select</option>
-        <option value="TrueFalse">True-Flase</option>
-        <option value="Paragraph">Paragraph</option>
-        <option value="ShortAnswer">Short Answer</option>
-    </select>
-
-    <div ng-repeat="q in questions track by $index">
-        {{q}}
-    </div>
-
-    <button ng-click="addQuestion()">AddQuestion</button>
-
-    <h2>Statement</h2>
-    <div class="question">
-        <h1>Statement {{statement}}</h1>
-
-        <input type="text" class="form-control" ng-model="statement" placeholder="{{statement}}"><br>
-        <button ng-click="addMoreOptions()">+ Options</button>
+            <br />
         
-        <div class="multiselect" ng-hide="selected != 'MultiSelect'">
-            <div ng-repeat="x in numberQuestions">
-                <div class="input-group">
-                    <input class="mscheck" ng-if="selected == 'MultiSelect'" type="checkbox" name="quetion" value={{x}}>
-                    <input class="mstext form-control" ng-if="selected == 'MultiSelect'" style="width:90%" >
+            <div class="panel panel-success ">
+                <div class="panel-heading">
+                    Editing Question
+                </div>
+                <div class="panel-body">
+                    <select ng-model="selected">
+                        <option value="MultiSelect">Multi-Select</option>
+                        <option value="SingleSelect">Single-Select</option>
+                        <option value="TrueFalse">True-Flase</option>
+                        <option value="Paragraph">Paragraph</option>
+                        <option value="ShortAnswer">Short Answer</option>
+                    </select>
+                    <button type="button" class="btn btn-default" aria-label="Left Align" ng-click="addOption()">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-default" aria-label="Left Align" ng-click="removeOption()">
+                        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                    </button>
+                    <p>Score</p>
+                    <input id="testScore" type="number" min="1" max="{{testMaxScore}}" class="form-control" ng-model="questionScore">
+                    <div class="question">
+                        <label>Question</label>
+                        <textarea type="text" class="form-control" ng-model="statement" placeholder="{{statement}}"></textarea><br>
+                        <label>Options</label>
+                        <div class="multiselect" ng-hide="selected != 'MultiSelect'">
+                            <div ng-repeat="x in numberQuestions track by $index">
+                                <div class="input-group">
+                                    <input class="mscheck" ng-if="selected == 'MultiSelect'" type="checkbox" name="quetion" value={{x}}>
+                                    <input class="mstext form-control" ng-if="selected == 'MultiSelect'" style="width:90%">
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+
+                        <div class="singleselect" ng-hide="selected != 'SingleSelect'">
+                            <div ng-repeat="x in numberQuestions" track by $index>
+                                <div class="input-group">
+                                    <input class="sscheck" ng-if="selected == 'SingleSelect'" type="radio" name="quetion" value={{x}}>
+                                    <input class="sstext form-control" ng-if="selected == 'SingleSelect'" style="width:90%">
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+
+                        <div class="truefalse" ng-hide="selected != 'TrueFalse'">
+                            <input class="tfcheck" ng-if="selected == 'TrueFalse'" type="radio" name="tfq{{$index}}" value={{x}}><span ng-if="selected == 'TrueFalse'">True</span><br />
+                            <input class="tfcheck" ng-if="selected == 'TrueFalse'" type="radio" name="tfq{{$index}}" value={{x}}><span ng-if="selected == 'TrueFalse'">False</span>
+                        </div>
+
+                        <div class="shortanswer" ng-hide="selected != 'ShortAnswer'">
+                            <input class="shortanswercheck form-control" ng-if="selected == 'ShortAnswer'" type="text" name="sa{{$index}}">
+                        </div>
+
+
+                        <div class="paragraph" ng-hide="selected != 'Paragraph'">
+                            <textarea class="paragraphcheck form-control" ng-if="selected == 'Paragraph'" rows="8" name="sa{{$index}}"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-default" ng-click="addQuestion()">Add Question</button>
+                </div>
+            </div>
+       
+
+        </div>
+        
+        <div class="col-md-8">
+            <h1>Questions</h1>
+            <div class="bookmark" ng-repeat="question in allQuestions  track by $index">
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" ng-if="question.type == 'multiplechoice'">Multiple Choice</h3>
+                            <h3 class="panel-title" ng-if="question.type == 'singlechoice'">Single Choice</h3>
+                            <h3 class="panel-title" ng-if="question.type == 'booleanquestion'">True/False</h3>
+                            <h3 class="panel-title" ng-if="question.type == 'shortanswer'">Short Answer</h3>
+                            <h3 class="panel-title" ng-if="question.type == 'paragraph'">"Short Paragraph</h3>
+                        </div>
+                        <div class="panel-body">
+                            <h4>Question</h4>
+                            <b> {{question.statement}}</b>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="options">
+                                <b>Answers</b>
+                                <div class="multiselect" ng-hide="question.type != 'multiplechoice'">
+                                    <div ng-repeat="option in question.posibleAnswers track by $index">
+                                        <div class="input-group">
+                                            <input disabled class="mscheckDummy" ng-if="question.type == 'multiplechoice'" type="checkbox" name="quetion" checked="checked"> {{option}}<br>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="singleselect" ng-hide="question.type != 'singlechoice'">
+                                    <div ng-repeat="option in question.posibleAnswers track by $index">
+                                        <div class="input-group">
+                                            <input disabled class="sscheckDummy" ng-if="question.type == 'singlechoice'" type="radio" name="quetion" > {{option}}<br>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="truefalse" ng-hide="question.type!= 'booleanquestion'">
+                                    <input disabled class="tfcheckdummy" ng-if="question.type == 'TrueFalse'" type="radio" name="tfq{{$index}}" value={{x}}><span ng-if="selected == 'TrueFalse'">True</span><br />
+                                    <input disabled class="tfcheckdummy" ng-if="question.type == 'TrueFalse'" type="radio" name="tfq{{$index}}" value={{x}}><span ng-if="selected == 'TrueFalse'">False</span>
+                                </div>
+
+                                <div class="shortanswer" ng-hide="question.type != 'shortanswer'">
+                                    <input class="shortanswercheck form-control" ng-if="selected == 'ShortAnswer'" type="text" name="sa{{$index}}">
+                                </div>
+                           
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="singleselect" ng-hide="selected != 'SingleSelect'">
-            <div ng-repeat="x in numberQuestions">
-                <div class="input-group">
-                    <input class="sscheck" ng-if="selected == 'SingleSelect'" type="radio" name="quetion" value={{x}}>
-                    <input class="sstext form-control" ng-if="selected == 'SingleSelect'" style="width:90%">
-                </div>
+        @*<div class="panel panel-primary">
+            <div class="panel-heading">
+
             </div>
-        </div>
+            <div class="panel-body">
 
-        <div class="truefalse" ng-hide="selected != 'TrueFalse'">
-            <input class="tfcheck" ng-if="selected == 'TrueFalse'" type="radio" name="tfq{{$index}}" value={{x}}><span ng-if="selected == 'TrueFalse'">True</span><br/>
-            <input class="tfcheck" ng-if="selected == 'TrueFalse'" type="radio" name="tfq{{$index}}" value={{x}}><span ng-if="selected == 'TrueFalse'">False</span>
-        </div>
+            </div>
+            <div class="panel-footer">
 
-        <div class="shortanswer" ng-hide="selected != 'ShortAnswer'">
-            <input class="shortanswercheck form-control" ng-if="selected == 'ShortAnswer'" type="text" name="sa{{$index}}" > 
-        </div>
-
-
-        <div class="paragraph" ng-hide="selected != 'Paragraph'">
-            <textarea class="paragraphcheck form-control" ng-if="selected == 'Paragraph'" rows="8" name="sa{{$index}}"></textarea>
-        </div>
-
-    </div>
+            </div>
+        </div>*@
+   
 </div>
-<div>
-    @Scripts.Render("~/bundles/angularjs")
-    @Scripts.Render("~/Scripts/appScripts/app.js")
-    @Html.ActionLink("Back to List", "Index")
+    <div>
+        @Scripts.Render("~/bundles/angularjs")
+        @Scripts.Render("~/Scripts/appScripts/professor.js")
+        @Html.ActionLink("Back to List", "Index")
+    </div>
 </div>
