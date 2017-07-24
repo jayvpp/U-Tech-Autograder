@@ -230,7 +230,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="img\home-bg.jpg" />
     <Content Include="Scripts\angular.min.js" />
-    <Content Include="Scripts\appScripts\app.js" />
+    <Content Include="Scripts\appScripts\professor.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
