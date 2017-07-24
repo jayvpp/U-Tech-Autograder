@@ -156,25 +156,25 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
     };
 
     $scope.submitTest = function () {
-        //error = false;
+        error = false;
 
-        //if ($scope.testName == "") {
-        //    $scope.alerts.push("You must enter a Test Name before submitting");
-        //    error = true;
-        //}
-        //if ($scope.testMaxScore == "") {
-        //    $scope.alerts.push("You must enter a Test Maximun Score value before submitting");
-        //    error = true;
-        //}  
-        //if ($scope.testPassingGrade == ""){
-        //    $scope.alerts.push("You must enter a Test Passing Grade value before submitting");
-        //    error = true;
-        //}
-        //if (error) {
-        //    $timeout(function () { $scope.alerts.splice(0, $scope.alerts.length); }, 5000);
-        //    return
-        //}
-        alert("ccalling http");
+        if ($scope.testName == "") {
+            $scope.alerts.push("You must enter a Test Name before submitting");
+            error = true;
+        }
+        if ($scope.testMaxScore == "") {
+            $scope.alerts.push("You must enter a Test Maximun Score value before submitting");
+            error = true;
+        }  
+        if ($scope.testPassingGrade == ""){
+            $scope.alerts.push("You must enter a Test Passing Grade value before submitting");
+            error = true;
+        }
+        if (error) {
+            $timeout(function () { $scope.alerts.splice(0, $scope.alerts.length); }, 5000);
+            return
+        }
+       
         var request = $http(
                 {
                     method: "post",
