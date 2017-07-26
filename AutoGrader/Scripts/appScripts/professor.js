@@ -11,26 +11,28 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
     $scope.paragraphQuestions = []
 
     $scope.selected = "MultiSelect";
-    $scope.statement = "Type question...";
+    $scope.statement = "";
     $scope.testName = "";
     $scope.testMaxScore = "";
     $scope.testPassingGrade = "";
     $scope.add = function () {
       
     }
-    function buildBoolenQuestion(statement,answer) {
+    function buildBoolenQuestion(statement,answer, score) {
         var question = {
             "type": "booleanquestion",
+            "score": score,
             "statement": statement,
             "answer" : answer
         };
         return question;
     }
 
-    function buildSingleChoiceQuestion(statement, posibleAnswers, correctAnswer)
+    function buildSingleChoiceQuestion(statement, posibleAnswers, correctAnswer, score)
     {
         var question = {
             "type": "singlechoice",
+            "score" : score,
             "statement": statement,
             "posibleAnswers": posibleAnswers,
             "correctAnswer" : correctAnswer
@@ -38,9 +40,10 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
         return question;
     }
 
-    function buildMultipleChoiceQuestion(statement, posibleAnswers, correctAnswers) {
+    function buildMultipleChoiceQuestion(statement, posibleAnswers, correctAnswers, score) {
         var question = {
             "type": "multiplechoice",
+            "score": score,
             "statement": statement,
             "posibleAnswers": posibleAnswers,
             "correctAnswers": correctAnswers
@@ -48,19 +51,21 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
         return question;
     }
 
-    function buildShortAnswerQuestion(statement, answer)
+    function buildShortAnswerQuestion(statement, answer, score)
     {
         var question = {
             "type": "shortanswer",
+            "score": score,
             "statement": statement,
             "answer": answer
         };
         return question;
     }
 
-    function buildParagraphAnswerQuestion(statement, paragraphAnswer) {
+    function buildParagraphAnswerQuestion(statement, paragraphAnswer, score) {
         var question = {
             "type": "paragraph",
+            "score": score,
             "statement": statement,
         };
         return question;
@@ -69,13 +74,13 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
 
     function retriveBoolenQuestion() {
         var checkValues = $(".tfcheck");
-
         var result = true;
+        var score = $("#testScore").val();
 
         if (!($(checkValues[0]).is(':checked')))
             result = false;
 
-        var question = buildBoolenQuestion($scope.statement, result);
+        var question = buildBoolenQuestion($scope.statement, result, score);
 
         return question;
     };
@@ -83,9 +88,9 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
     function retriveSingleChoiceQuestion()
     {
         var optionsCount = $(".sscheck").size();
-
         var checkValues = $(".sscheck");
         var textValues = $(".sstext");
+        var score = $("#testScore").val();
 
         var posibleAnswers = [];
         var correctAnswer = "";
@@ -99,8 +104,8 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
         }
 
         var question = buildSingleChoiceQuestion($scope.statement,
-                                         posibleAnswers,
-                                         correctAnswer);
+                                                 posibleAnswers,
+                                                 correctAnswer,score);
         return question;
     };
 
@@ -108,6 +113,8 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
         console.log("entering retriveMultipleChoiceQuestion");
 
         var optionsCount = $(".mscheck").size();
+        var score = $("#testScore").val();
+
         console.log("count " + optionsCount);
         var checkValues = $(".mscheck");
         var textValues = $(".mstext");
@@ -123,8 +130,9 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
         }
 
         var question = buildMultipleChoiceQuestion($scope.statement,
-                                                    posibleAnswers,
-                                                    correctAnswers)
+                                                   posibleAnswers,
+                                                   correctAnswers,
+                                                   score)
 
         return question;
     };
@@ -132,8 +140,9 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
     function retriveShortAnswerQuestion()
     {
         var answer = $(".shortanswercheck").val().toLowerCase();
+        var score = $("#testScore").val();
         //check that answer is one world,if not return notification to user
-        var question = buildShortAnswerQuestion($scope.statement, answer);
+        var question = buildShortAnswerQuestion($scope.statement, answer, score);
         return question;
     };
 
@@ -155,6 +164,11 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
         $scope.alerts.splice(0, $scope.alerts.length);
     };
 
+    function cleanAlerts()
+    {
+        $timeout(function () { $scope.alerts.splice(0, $scope.alerts.length); }, 5000);
+    }
+
     $scope.submitTest = function () {
         error = false;
 
@@ -171,7 +185,7 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
             error = true;
         }
         if (error) {
-            $timeout(function () { $scope.alerts.splice(0, $scope.alerts.length); }, 5000);
+            cleanAlerts();
             return
         }
        
@@ -179,7 +193,7 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
                 {
                     method: "post",
                     dataType: "json",
-                    url: "/Test/CreateMultipleChoiceQuestion/",
+                    url: "/Test/Create/",
                     data: {
                      
                         testName: $scope.testName,
@@ -198,11 +212,56 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
     };
 
 
+    function isValidQuestion(questionType, question) {
+        if (question.statement == "" || question.score == "")
+            return false;
+
+        if (questionType == "MultiSelect" || questionType == "SingleSelect") {
+            console.log("enetring cheking singl multi select");
+            console.log(JSON.stringify(question));
+            if (question.posibleAnswers.length < 2) return false;
+            for (i = 0 ; i < question.posibleAnswers.length ; i++) {
+                if (question.posibleAnswers[i] == "")
+                { return false; }
+            }
+        }
+        if (questionType == "MultiSelect") {
+            if (question.correctAnswers.length <= 0) return false;
+            for (i = 0 ; i < question.correctAnswers.length ; i++) {
+                if (question.correctAnswers[i] == "")
+                { return false; }
+            }
+            return true;
+        }
+
+        if (questionType == "SingleSelect") {
+            return question.correctAnswer != ""
+        }
+
+        if (questionType == "TrueFalse") {
+            //need no checking, html will enforce correctness.
+            return true;
+        }
+
+        if (questionType == "ShortAnswer")
+            return question.answer != ""
+
+    }
+
+    function displayErrorFillingQuestion() {
+        $scope.alerts.push("Error Adding Question, Make sure you enter all necesary information");
+        cleanAlerts();
+    }
+
     $scope.addQuestion = function () {
 
         //WE CAN REFACTOR THE SCOPE.QUESTIONS.PUSH SO WE DONT NEED TO CALL IN ON EACH IF
         if ($scope.selected == "MultiSelect") {
             var question = retriveMultipleChoiceQuestion();
+            if (!isValidQuestion("MultiSelect", question)) {
+                displayErrorFillingQuestion();
+                return;
+            }
             $scope.allQuestions.push(question);
             $scope.multipleChoiceQuestions.push(question);
             return;
@@ -210,13 +269,21 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
 
         if ($scope.selected == "SingleSelect") {
             var question = retriveSingleChoiceQuestion();
+            if (!isValidQuestion("SingleSelect", question)) {
+                displayErrorFillingQuestion();
+                return;
+            }
             $scope.allQuestions.push(question);
             $scope.singleChoiceQuestions.push(question);
             return;
         }
 
         if ($scope.selected == "TrueFalse") {
-            var question = retriveBoolenQuestion()
+            var question = retriveBoolenQuestion();
+            if (!isValidQuestion("TrueFalse", question)) {
+                displayErrorFillingQuestion();
+                return;
+            }
             $scope.allQuestions.push(question);
             $scope.booleanQuestion.push(question);
             return;
@@ -226,6 +293,10 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
             var answer = $(".shortanswercheck").val().toLowerCase();
             //check that answer is one world,if not return notification to user
             var question = retriveShortAnswerQuestion();
+            if (!isValidQuestion("ShortAnswer", question)) {
+                displayErrorFillingQuestion();
+                return;
+            }
             $scope.allQuestions.push(question);
             $scope.shortAnswerQuestion.push(question);
             return;

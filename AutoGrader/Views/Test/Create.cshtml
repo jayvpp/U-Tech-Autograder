@@ -1,4 +1,4 @@
-﻿@model AutoGrader.Models.TestBase
+﻿@model AutoGrader.Models.BasicTypes.Test
 
 <div ng-app="autoTesting" ng-controller="createTestController">
 
@@ -21,14 +21,14 @@
             </div>
             <div class="form-group">
                 <label>Score</label>
-                <input id="testMaxScore" class="form-control" ng-model="testMaxScore">
+                <input type="number" min="1" class="form-control" ng-model="testMaxScore">
             </div>
             <div class="form-group">
                 <label>Passing Grades</label>
-                <input id="testPassingScore" class="form-control" ng-model="testPassingGrade">
+                <input type="number" min="1" max="{{testMaxScore}}" id="testPassingScore" class="form-control" ng-model="testPassingGrade">
             </div>
 
-            <br />
+            <br />0
         
             <div class="panel panel-success ">
                 <div class="panel-heading">
@@ -75,7 +75,7 @@
                         </div>
 
                         <div class="truefalse" ng-hide="selected != 'TrueFalse'">
-                            <input class="tfcheck" ng-if="selected == 'TrueFalse'" type="radio" name="tfq{{$index}}" value={{x}}><span ng-if="selected == 'TrueFalse'">True</span><br />
+                            <input class="tfcheck" ng-if="selected == 'TrueFalse'" type="radio" checked="checked" name="tfq{{$index}}" value={{x}}><span ng-if="selected == 'TrueFalse'">True</span><br />
                             <input class="tfcheck" ng-if="selected == 'TrueFalse'" type="radio" name="tfq{{$index}}" value={{x}}><span ng-if="selected == 'TrueFalse'">False</span>
                         </div>
 
