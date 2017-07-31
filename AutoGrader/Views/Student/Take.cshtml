@@ -1,0 +1,77 @@
+﻿@model AutoGrader.Models.BasicTypes.Test
+<div>
+    @Scripts.Render("~/bundles/angularjs")
+    @Scripts.Render("~/Scripts/appScripts/student.js")
+</div>
+
+@{
+    ViewBag.Title = "Taking Tests " + Model.Name;
+}
+
+<div ng-app="autoTesting" ng-controller="takeTestController" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
+    <div class="container">
+        <div id="testInformation">
+            <p>Name: <input type="text" ng-model="ioio"></p>
+            <p>You wrote: {{ ioio }}</p>
+            <h1>Test Information</h1>
+            <span>Name: <label ng-bind="test.Name"></label></span> <br />
+            <span>Maximun Score: <label ng-bind="test.MaxScore"></label></span><br />
+            <span>Passing Score: <label ng-bind="test.PassingScore"></label></span><br />
+            <button class="btn btn-success" ng-click="submitTest()">Submit Test</button>
+        </div>
+    </div>
+    <br />
+    <div id="testSection">
+        <div ng-repeat="question in AllQuestion  track by $index">
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="panel panel-primary question" id="{{question.Id}}">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" ng-if="question.Type == 'multiplechoice'">Multiple Choice</h3>
+                            <h3 class="panel-title" ng-if="question.Type == 'singlechoice'">Single Choice</h3>
+                            <h3 class="panel-title" ng-if="question.Type == 'booleanquestion'">True/False</h3>
+                            <h3 class="panel-title" ng-if="question.Type == 'shortanswer'">Short Answer</h3>
+                            <h3 class="panel-title" ng-if="question.Type == 'paragraph'">"Short Paragraph</h3>
+                        </div>
+                        <div class="panel-body">
+                            <h4>Question: [<span ng-bind="question.Score"></span> pts]</h4>
+                            <b> {{question.Statement}}</b>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="options">
+                                <b>Answers</b>
+                                <div class="multiselect" ng-hide="question.Type != 'multiplechoice'">
+                                    <div ng-repeat="option in question.PosibleAnswers track by $index">
+                                        <div class="input-group">
+                                            <input class="question{{question.Id}} multiselect" type="checkbox" name="question" value="{{option.Data}}"> {{option.Data}}<br>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="singleselect" ng-hide="question.Type != 'singlechoice'">
+                                    <div ng-repeat="option in question.PosibleAnswers track by $index">
+                                        <div class="input-group">
+                                            <input class="question{{question.Id}} singleselect" type="radio" name="option{{question.Id}}" value="{{option.Data}}"> {{option.Data}}<br>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="truefalse" ng-hide="question.Type!= 'booleanquestion'">
+                                    <input class="question{{question.Id}} truefalse"  type="radio" name="tfq{{$index}}" value={{x}}><span>True</span><br />
+                                    <input class="question{{question.Id}} truefalse"  type="radio" name="tfq{{$index}}" value={{x}}><span>False</span>
+                                </div>
+
+                                <div class="shortanswer" ng-hide="question.Type != 'shortanswer'">
+                                    <input class="question{{question.Id}} shortanswer form-control" type="text" name="sa{{$index}}">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+    </div>
+</div>
+

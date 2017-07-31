@@ -206,14 +206,29 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Controllers\Grader.cs" />
+    <Compile Include="Controllers\GraderController.cs" />
+    <Compile Include="Controllers\ProfessorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\StudentController.cs" />
+    <Compile Include="Migrations\AutoGraderDbMigration\201707310545193_m1.cs" />
+    <Compile Include="Migrations\AutoGraderDbMigration\201707310545193_m1.Designer.cs">
+      <DependentUpon>201707310545193_m1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\AutoGraderDbMigration\Configuration.cs" />
+    <Compile Include="Models\BasicTypes\IGrader.cs" />
+    <Compile Include="Models\BasicTypes\IGradeResult.cs" />
+    <Compile Include="Models\BasicTypes\QuestionEvaluationResult.cs" />
+    <Compile Include="Models\BasicTypes\QuestionResponses.cs" />
+    <Compile Include="Models\BasicTypes\TestGradeResult.cs" />
+    <Compile Include="Models\BasicTypes\TestResult.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\BasicTypes\AutoGradingDb.cs" />
     <Compile Include="Models\BasicTypes\BooleanQuestion.cs" />
     <Compile Include="Models\BasicTypes\Test.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -236,6 +251,7 @@
     <Content Include="img\home-bg.jpg" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\appScripts\professor.js" />
+    <Content Include="Scripts\appScripts\student.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -287,12 +303,14 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Home\Professor.cshtml" />
-    <Content Include="Views\Home\Student.cshtml" />
-    <Content Include="Views\Test\Create.cshtml" />
+    <Content Include="Views\Student\Index.cshtml" />
+    <Content Include="Views\Professor\Create.cshtml" />
+    <Content Include="Views\Professor\Index.cshtml" />
+    <Content Include="Views\Student\Take.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Grader\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -301,6 +319,11 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\AutoGraderDbMigration\201707310545193_m1.resx">
+      <DependentUpon>201707310545193_m1.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -177,4 +177,6 @@ C:\Users\jason\Desktop\Summer\soft eng\U-Tech-Autograder\U-Tech-Autograder\AutoG
 C:\Users\jason\Desktop\Summer\soft eng\U-Tech-Autograder\U-Tech-Autograder\AutoGrader\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\Users\jason\Desktop\Summer\soft eng\U-Tech-Autograder\U-Tech-Autograder\AutoGrader\obj\Debug\AutoGrader.dll
 C:\Users\jason\Desktop\Summer\soft eng\U-Tech-Autograder\U-Tech-Autograder\AutoGrader\obj\Debug\AutoGrader.pdb
+C:\Users\jason\Desktop\Summer\soft eng\U-Tech-Autograder\U-Tech-Autograder\AutoGrader\obj\Debug\AutoGrader.Migrations.AutoGraderDbMigration.m1.resources
+C:\Users\jason\Desktop\Summer\soft eng\U-Tech-Autograder\U-Tech-Autograder\AutoGrader\obj\Debug\AutoGrader.csproj.GenerateResource.Cache
 C:\Users\jason\Desktop\Summer\soft eng\U-Tech-Autograder\U-Tech-Autograder\AutoGrader\obj\Debug\AutoGrader.csprojResolveAssemblyReference.cache

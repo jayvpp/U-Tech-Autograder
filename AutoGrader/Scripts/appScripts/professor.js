@@ -15,9 +15,18 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
     $scope.testName = "";
     $scope.testMaxScore = "";
     $scope.testPassingGrade = "";
-    $scope.add = function () {
-      
+    
+    function BuildAnswerObj(arrayOfAnswers) {
+        answ = []
+        for (i = 0; i < arrayOfAnswers.length; i++) {
+            answ.push({
+                "Id": "",
+                "Data": arrayOfAnswers[i]
+            });
+        }
+        return answ;
     }
+
     function buildBoolenQuestion(statement,answer, score) {
         var question = {
             "type": "booleanquestion",
@@ -34,19 +43,20 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
             "type": "singlechoice",
             "score" : score,
             "statement": statement,
-            "posibleAnswers": posibleAnswers,
+            "posibleAnswers": BuildAnswerObj(posibleAnswers),
             "correctAnswer" : correctAnswer
         };
         return question;
     }
 
     function buildMultipleChoiceQuestion(statement, posibleAnswers, correctAnswers, score) {
+
         var question = {
             "type": "multiplechoice",
             "score": score,
             "statement": statement,
-            "posibleAnswers": posibleAnswers,
-            "correctAnswers": correctAnswers
+            "posibleAnswers": BuildAnswerObj(posibleAnswers),
+            "correctAnswers": BuildAnswerObj(correctAnswers)
         };
         return question;
     }
@@ -57,7 +67,7 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
             "type": "shortanswer",
             "score": score,
             "statement": statement,
-            "answer": answer
+            "correctShortAnswer": answer
         };
         return question;
     }
@@ -169,6 +179,7 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
         $timeout(function () { $scope.alerts.splice(0, $scope.alerts.length); }, 5000);
     }
 
+   
     $scope.submitTest = function () {
         error = false;
 
@@ -188,25 +199,41 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
             cleanAlerts();
             return
         }
-       
-        var request = $http(
+   
+        var t = {
+
+                Name: $scope.testName,
+                MaxScore: $scope.testMaxScore,
+                PassingScore: $scope.testPassingGrade,
+                multipleChoiceQuestions: $scope.multipleChoiceQuestions,
+                singleChoiceQuestions: $scope.singleChoiceQuestions,
+                booleanQuestions: $scope.booleanQuestions,
+                shortAnswerQuestions: $scope.shortAnswerQuestions
+            //paragraphQuestions : $Scope.paragraphQuestion
+        }
+        
+        $http(
                 {
                     method: "post",
                     dataType: "json",
-                    url: "/Test/Create/",
+                    url: "/Professor/Create/",
                     data: {
-                     
-                        testName: $scope.testName,
-                        testMaxScore: $scope.testMaxScore,
-                        testPassingGrade: $scope.testPassingGrade,
+
+                        Name: $scope.testName,
+                        MaxScore: $scope.testMaxScore,
+                        PassingScore: $scope.testPassingGrade,
                         multipleChoiceQuestions: $scope.multipleChoiceQuestions,
                         singleChoiceQuestions: $scope.singleChoiceQuestions,
-                        booleanQuestions: $scope.booleanQuestion,
-                        shortAnswerQuestions: $scope.shortAnswerQuestion
+                        booleanQuestions: $scope.booleanQuestions,
+                        shortAnswerQuestions: $scope.shortAnswerQuestions
                         //paragraphQuestions : $Scope.paragraphQuestion
                     }
                 }
-            );
+            ).then(function successCallback(response) {
+                window.location.pathname = "/Professor/Index";
+            }, function errorCallback(response) {
+                $scope.alerts("Error adding tests");
+            });
         return;
 
     };
@@ -285,7 +312,7 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
                 return;
             }
             $scope.allQuestions.push(question);
-            $scope.booleanQuestion.push(question);
+            $scope.booleanQuestions.push(question);
             return;
         }
 
@@ -298,7 +325,7 @@ app.controller("createTestController", function ($scope, $http, $timeout) {
                 return;
             }
             $scope.allQuestions.push(question);
-            $scope.shortAnswerQuestion.push(question);
+            $scope.shortAnswerQuestions.push(question);
             return;
         }
 

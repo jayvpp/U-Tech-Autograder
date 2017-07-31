@@ -13,7 +13,17 @@ namespace AutoGrader
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            routes.MapRoute(
+            name: "Professor",
+            url: "{controller}/{action}",
+            defaults: new { controller = "Professor", action = "Index", id = UrlParameter.Optional }
+            );
 
+            routes.MapRoute(
+            name: "Student",
+            url: "{controller}/{action}",
+            defaults: new { controller = "Student", action = "Index", id = UrlParameter.Optional }
+            );
 
             routes.MapRoute(
                 name: "Default",
@@ -22,11 +32,7 @@ namespace AutoGrader
 
                 );
 
-            routes.MapRoute(
-            name: "Professor",
-            url: "{controller}/{action}",
-            defaults: new { controller = "Test", action = "Index", id = UrlParameter.Optional }
-            );
+
         }
     }
 }

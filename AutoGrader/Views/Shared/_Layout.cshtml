@@ -26,7 +26,7 @@
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                     @if(User.IsInRole("professor")){
-                        <li>@Html.ActionLink("CrateTest", "Create", "Test")</li>
+                        <li>@Html.ActionLink("Crate Test", "Create", "Professor")</li>
                     }
 
                    @if (User.IsInRole("student"))

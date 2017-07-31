@@ -1,0 +1,51 @@
+﻿@model IEnumerable<AutoGrader.Models.BasicTypes.Test>
+
+@{
+    ViewBag.Title = "Student";
+}
+
+<h2>Student</h2>
+
+<h3>Test List</h3>
+<p>
+    @Html.ActionLink("View My Scores", "Scores")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProfessorIdentification)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MaxScore)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PassingScore)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProfessorIdentification)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxScore)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PassingScore)
+            </td>
+            <td>
+                @Html.ActionLink("Take", "Take", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>

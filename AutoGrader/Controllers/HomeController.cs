@@ -21,11 +21,12 @@ namespace AutoGrader.Controllers
             if (User.IsProfessor())
             {
                 ViewBag.Name = User.Identity.Name;
-                return View("Professor"); }
+                return RedirectToAction("Index","Professor");
+            }
             if (User.IsStudent())
             {
                 ViewBag.Name = User.Identity.Name;
-                return View("Student");
+                return RedirectToAction("Index", "Student");
             }
             else
                 return View();
